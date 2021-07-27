@@ -9,12 +9,12 @@ import (
 	"time"
 )
 
-type CurrProduct struct {
+type ProductQueue struct {
 	ProductId map[string]bool
 	mu        sync.Mutex
 }
 
-var CurrentProduct CurrProduct
+var ProdQueue ProductQueue
 
 func GetProducts(c *gin.Context) {
 	var product []Product.Products
@@ -56,16 +56,16 @@ func UpdateProduct(c *gin.Context) {
 	productId := c.Params.ByName("ProductId")
 
 	defer func() {
-		CurrentProduct.ProductId[productId] = false
-		CurrentProduct.mu.Unlock()
+		ProdQueue.ProductId[productId] = false
+		ProdQueue.mu.Unlock()
 	}()
 
 	for {
-		if CurrentProduct.ProductId[productId] {
+		if ProdQueue.ProductId[productId] {
 			time.Sleep(time.Millisecond * 100)
 		} else {
-			CurrentProduct.mu.Lock()
-			CurrentProduct.ProductId[productId] = true
+			ProdQueue.mu.Lock()
+			ProdQueue.ProductId[productId] = true
 			break
 		}
 	}
@@ -91,16 +91,16 @@ func DeleteProduct(c *gin.Context) {
 	productId := c.Params.ByName("ProductId")
 
 	defer func() {
-		CurrentProduct.ProductId[productId] = false
-		CurrentProduct.mu.Unlock()
+		ProdQueue.ProductId[productId] = false
+		ProdQueue.mu.Unlock()
 	}()
 
 	for {
-		if CurrentProduct.ProductId[productId] {
+		if ProdQueue.ProductId[productId] {
 			time.Sleep(time.Millisecond * 100)
 		} else {
-			CurrentProduct.mu.Lock()
-			CurrentProduct.ProductId[productId] = true
+			ProdQueue.mu.Lock()
+			ProdQueue.ProductId[productId] = true
 			break
 		}
 	}

@@ -14,10 +14,10 @@ func GetOrders(order *[]Orders) (err error) {
 
 func CreateOrder(order *Orders) (err error) {
 	err = Config.DB.Transaction(func(tx *gorm.DB) error {
-		if err = Config.DB.Create(order).Error; err != nil {
+		if err = tx.Create(order).Error; err != nil {
 			return err
 		}
-		if err = Config.DB.Model(order).Update("Status", "Order placed").Error; err != nil {
+		if err = tx.Model(order).Update("Status", "Order placed").Error; err != nil {
 			return err
 		}
 		return nil
@@ -34,6 +34,13 @@ func GetOrderById(order *Orders, OrderId string) (err error) {
 
 func GetOrdersHistory(order *[]Orders, CustomerId string) (err error) {
 	if err = Config.DB.Where("customer_id = ?", CustomerId).Find(order).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateOrder(order *Orders) (err error) {
+	if err = Config.DB.Model(order).Update("Status", "Success").Error; err != nil {
 		return err
 	}
 	return nil

@@ -6,7 +6,7 @@ type Products struct {
 	gorm.Model
 	ProductName     string
 	ProductPrice    int
-	ProductQuantity int `gorm:"check:quantity >= 0"`
+	ProductQuantity int
 }
 
 func (product *Products) TableName() string {

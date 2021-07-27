@@ -17,6 +17,7 @@ func GetOrders(c *gin.Context) {
 }
 
 func CreateOrder(c *gin.Context) {
+
 	var order Order.Orders
 	c.BindJSON(&order)
 	err := Order.CreateOrder(&order)
@@ -25,6 +26,8 @@ func CreateOrder(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, order)
 	}
+
+	go OrderQueue(&order)
 }
 
 func GetOrderById(c *gin.Context) {
