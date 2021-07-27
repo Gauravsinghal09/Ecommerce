@@ -34,7 +34,9 @@ func main() {
 	}
 
 	AutoMigrateDB()
+
 	Controllers.CurrentProduct = Controllers.CurrProduct{}
+	Controllers.CurrentProduct.ProductId = make(map[string]bool)
 
 	routes := Router.SetupRoutes()
 	routes.Run()
