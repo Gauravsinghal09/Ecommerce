@@ -22,19 +22,19 @@ func CreateProduct(product *Products) (err error) {
 	return nil
 }
 
-func GetProductByID(product *Products, id string) (err error) {
-	if err = Config.DB.Preload(clause.Associations).Where("id = ?", id).First(product).Error; err != nil {
+func GetProductByID(product *Products, productId string) (err error) {
+	if err = Config.DB.Preload(clause.Associations).Where("id = ?", productId).First(product).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateProduct(product *Products, id string) (err error) {
+func UpdateProduct(product *Products, productId string) (err error) {
 	Config.DB.Save(product)
 	return nil
 }
 
-func DeleteProduct(product *Products, id string) (err error) {
-	Config.DB.Where("id = ?", id).Delete(product)
+func DeleteProduct(product *Products, productId string) (err error) {
+	Config.DB.Where("id = ?", productId).Delete(product)
 	return nil
 }
