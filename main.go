@@ -11,7 +11,6 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"time"
 )
 
 func InitialiseDB() (*gorm.DB, error) {
@@ -37,7 +36,7 @@ func main() {
 	AutoMigrateDB()
 
 	Controllers.CMap = Controllers.CustomerMap{}
-	Controllers.CMap.Map = make(map[int]time.Time)
+	//Controllers.CMap.Map = make(sync.Map)
 	//Controllers.CMap.Queue = []Order.Orders{}
 
 	routes := Router.SetupRoutes()
