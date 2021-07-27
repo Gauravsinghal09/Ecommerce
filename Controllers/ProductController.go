@@ -31,9 +31,9 @@ func CreateProduct(c *gin.Context) {
 }
 
 func GetProductById(c *gin.Context) {
-	id := c.Params.ByName("id")
+	productId := c.Params.ByName("ProductId")
 	var product Product.Products
-	err := Product.GetProductByID(&product, id)
+	err := Product.GetProductByID(&product, productId)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -43,13 +43,13 @@ func GetProductById(c *gin.Context) {
 
 func UpdateProduct(c *gin.Context) {
 	var product Product.Products
-	id := c.Params.ByName("id")
-	err := Product.GetProductByID(&product, id)
+	productId := c.Params.ByName("ProductId")
+	err := Product.GetProductByID(&product, productId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, product)
 	}
 	c.BindJSON(&product)
-	err = Product.UpdateProduct(&product, id)
+	err = Product.UpdateProduct(&product, productId)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -59,11 +59,11 @@ func UpdateProduct(c *gin.Context) {
 
 func DeleteProduct(c *gin.Context) {
 	var product Product.Products
-	id := c.Params.ByName("id")
-	err := Product.DeleteProduct(&product, id)
+	productId := c.Params.ByName("ProductId")
+	err := Product.DeleteProduct(&product, productId)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.JSON(http.StatusOK, gin.H{"id" + id: "is deleted"})
+		c.JSON(http.StatusOK, gin.H{"id" + productId: "is deleted"})
 	}
 }
