@@ -31,3 +31,10 @@ func GetOrderById(order *Orders, OrderId string) (err error) {
 	}
 	return nil
 }
+
+func GetOrdersHistory(order *[]Orders, CustomerId string) (err error) {
+	if err = Config.DB.Where("customer_id = ?", CustomerId).Find(order).Error; err != nil {
+		return err
+	}
+	return nil
+}

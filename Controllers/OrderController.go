@@ -37,3 +37,14 @@ func GetOrderById(c *gin.Context) {
 		c.JSON(http.StatusOK, order)
 	}
 }
+
+func GetOrdersHistory(c *gin.Context) {
+	CustomerId := c.Params.ByName("CustomerId")
+	var order []Order.Orders
+	err := Order.GetOrdersHistory(&order, CustomerId)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, order)
+	}
+}
