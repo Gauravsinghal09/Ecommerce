@@ -6,6 +6,7 @@ import (
 	"github.com/Gauravsinghal09/Ecommerce/Models/Customer"
 	"github.com/Gauravsinghal09/Ecommerce/Models/Order"
 	"github.com/Gauravsinghal09/Ecommerce/Models/Product"
+	"github.com/Gauravsinghal09/Ecommerce/Router"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -24,6 +25,6 @@ func main() {
 	Config.DB.AutoMigrate(&Customer.Customers{})
 	Config.DB.AutoMigrate(&Product.Products{})
 	Config.DB.AutoMigrate(&Order.Orders{})
-	//routes := Routes.SetupRoutes()
-	//routes.Run()
+	routes := Router.SetupRoutes()
+	routes.Run()
 }
