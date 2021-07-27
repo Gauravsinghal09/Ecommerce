@@ -5,7 +5,16 @@ import (
 	"github.com/Gauravsinghal09/Ecommerce/Models/Product"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"sync"
+	"time"
 )
+
+type CurrProduct struct {
+	productId map[string]bool
+	mu        sync.Mutex
+}
+
+var CurrentProduct CurrProduct
 
 func GetProducts(c *gin.Context) {
 	var product []Product.Products
@@ -42,14 +51,34 @@ func GetProductById(c *gin.Context) {
 }
 
 func UpdateProduct(c *gin.Context) {
+
+	time.Sleep(time.Second * 30)
+
 	var product Product.Products
 	productId := c.Params.ByName("ProductId")
+
+	defer func() {
+		CurrentProduct.productId[productId] = false
+		CurrentProduct.mu.Unlock()
+	}()
+
+	for {
+		if CurrentProduct.productId[productId] {
+			time.Sleep(time.Millisecond * 100)
+		} else {
+			CurrentProduct.mu.Lock()
+			CurrentProduct.productId[productId] = true
+			break
+		}
+	}
+
 	err := Product.GetProductByID(&product, productId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, product)
 	}
 	c.BindJSON(&product)
 	err = Product.UpdateProduct(&product, productId)
+
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -58,8 +87,27 @@ func UpdateProduct(c *gin.Context) {
 }
 
 func DeleteProduct(c *gin.Context) {
+
+	time.Sleep(time.Minute)
+
 	var product Product.Products
 	productId := c.Params.ByName("ProductId")
+
+	defer func() {
+		CurrentProduct.productId[productId] = false
+		CurrentProduct.mu.Unlock()
+	}()
+
+	for {
+		if CurrentProduct.productId[productId] {
+			time.Sleep(time.Millisecond * 100)
+		} else {
+			CurrentProduct.mu.Lock()
+			CurrentProduct.productId[productId] = true
+			break
+		}
+	}
+
 	err := Product.DeleteProduct(&product, productId)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
